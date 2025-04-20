@@ -5,8 +5,9 @@ text_splitter = RecursiveCharacterTextSplitter(
     chunk_overlap=100
 )
 
-def chunk_text_from_file(filename, chunk_size=500, chunk_overlap=100):
+def chunk_text_from_file(filename, chunk_size=500, chunk_overlap=100, save_path="chunks.pkl"):
     from langchain.text_splitter import RecursiveCharacterTextSplitter
+    import pickle
 
     try:
         with open(filename, "r", encoding="utf-8") as f:
@@ -23,7 +24,17 @@ def chunk_text_from_file(filename, chunk_size=500, chunk_overlap=100):
         chunk_overlap=chunk_overlap
     )
     chunks = text_splitter.split_text(long_text)
+
+    # 청크를 pickle 파일로 저장
+    try:
+        with open(save_path, "wb") as f:
+            pickle.dump(chunks, f)
+        print(f"청크가 {save_path} 파일로 저장되었습니다.")
+    except Exception as e:
+        print(f"청크 저장 실패: {e}")
+
     return chunks
+
 
 if __name__ == "__main__":
     filename = "취업규칙.txt"
